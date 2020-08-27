@@ -9,11 +9,12 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const employeeList = [];
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-inquirer
-  .prompt([
+function basicQuestions() {
+  inquirer.prompt([
     {
       message: "Enter your name",
       type: "input",
@@ -35,53 +36,84 @@ inquirer
       name: "role",
       choices: ["manager", "engineer", "intern"],
     },
-  ])
-  .then((answer) => {
-    switch (answer.role) {
-      case "manager":
-        addManager();
-        break;
-      case "engineer":
-        addEngineer();
-        break;
-      case "intern":
-        addIntern();
-        break;
-    }
-  });
+  ]);
+}
+basicQuestions().then((answer) => {
+  switch (answer.role) {
+    case "manager":
+      addManager(answer);
+      break;
+    case "engineer":
+      addEngineer(answer);
+      break;
+    case "intern":
+      addIntern(answer);
+      break;
+  }
+});
 
-function addManager() {
-  inquirer.prompt([
-    {
-      message: "what is your office number?",
-      type: "input",
-      name: "officeNumber",
-    },
-  ]);
+function addManager(employeeData) {
+  inquirer
+    .prompt([
+      {
+        message: "what is your office number?",
+        type: "input",
+        name: "officeNumber",
+      },
+    ])
+    .then((officeNumberanswer) => {
+      const manager = new Manager(
+        employeeData.name,
+        employeeData.id,
+        employeeData.email,
+        officeNumberanswer.officeNumber
+      );
+      employeeList.push(manager);
+    }); //end then
 }
-function addEngineer() {
-  inquirer.prompt([
-    {
-      message: "what is your github profile?",
-      type: "input",
-      name: "github",
-    },
-  ]);
+function addEngineer(employeeData) {
+  inquirer
+    .prompt([
+      {
+        message: "what is your github profile?",
+        type: "input",
+        name: "github",
+      },
+    ])
+    .then((githubAnswer) => {
+      const engineer = new Engineer(
+        employeeData.name,
+        employeeData.id,
+        employeeData.email,
+        githubAnswer.github
+      );
+      employeeList.push(engineer);
+    });
 }
-function addIntern() {
-  inquirer.prompt([
-    {
-      message: "which school do you attend?",
-      type: "input",
-      name: "school",
-    },
-  ]);
+function addIntern(employeeData) {
+  inquirer
+    .prompt([
+      {
+        message: "which school do you attend?",
+        type: "input",
+        name: "school",
+      },
+    ])
+    .then((internAnswer) => {
+      const intern = new Intern(
+        employeeData.name,
+        employeeData.id,
+        employeeData.email,
+        internAnswer.school
+      );
+      employeeList.push(intern);
+    });
 }
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
-
+render(employeeList);
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
@@ -97,3 +129,5 @@ function addIntern() {
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+
+//need a recursion
