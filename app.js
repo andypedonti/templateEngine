@@ -14,43 +14,46 @@ const employeeList = [];
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 function basicQuestions() {
-  inquirer.prompt([
-    {
-      message: "Enter your name",
-      type: "input",
-      name: "name",
-    },
-    {
-      message: "What is your email?",
-      type: "input",
-      name: "email",
-    },
-    {
-      message: "what is your ID?",
-      type: "input",
-      name: "id",
-    },
-    {
-      message: "What is your position?",
-      type: "list",
-      name: "role",
-      choices: ["manager", "engineer", "intern"],
-    },
-  ]);
+  inquirer
+    .prompt([
+      {
+        message: "Enter your name",
+        type: "input",
+        name: "name",
+      },
+      {
+        message: "What is your email?",
+        type: "input",
+        name: "email",
+      },
+      {
+        message: "what is your ID?",
+        type: "input",
+        name: "id",
+      },
+      {
+        message: "What is your position?",
+        type: "list",
+        name: "role",
+        choices: ["manager", "engineer", "intern"],
+      },
+    ])
+    .then((answer) => {
+      switch (answer.role) {
+        case "manager":
+          addManager(answer);
+
+          break;
+        case "engineer":
+          addEngineer(answer);
+          break;
+        case "intern":
+          addIntern(answer);
+          break;
+      }
+    });
 }
-basicQuestions().then((answer) => {
-  switch (answer.role) {
-    case "manager":
-      addManager(answer);
-      break;
-    case "engineer":
-      addEngineer(answer);
-      break;
-    case "intern":
-      addIntern(answer);
-      break;
-  }
-});
+basicQuestions();
 
 function addManager(employeeData) {
   inquirer
@@ -69,6 +72,8 @@ function addManager(employeeData) {
         officeNumberanswer.officeNumber
       );
       employeeList.push(manager);
+      askUser();
+      writeManager();
     }); //end then
 }
 function addEngineer(employeeData) {
@@ -88,6 +93,7 @@ function addEngineer(employeeData) {
         githubAnswer.github
       );
       employeeList.push(engineer);
+      askUser();
     });
 }
 function addIntern(employeeData) {
@@ -107,19 +113,37 @@ function addIntern(employeeData) {
         internAnswer.school
       );
       employeeList.push(intern);
+      askUser();
     });
+}
+
+function askUser() {
+  inquirer.prompt([
+    {
+      message: "would you like to add another team member?",
+      name: "new team",
+      type: "list",
+      choices: ["yes", "no"],
+    },
+  ]);
 }
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
+
 render(employeeList);
+
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
-
+function writeManager() {
+  fs.writeFile("managernewfile.html", employeeList, function (err) {
+    if (err) throw err;
+  });
+}
 // HINT: each employee type (manager, engineer, or intern) has slightly different
 // information; write your code to ask different questions via inquirer depending on
 // employee type.

@@ -1,0 +1,51 @@
+function askUser() {
+   inquirer.prompt([
+     {
+       Here you can ask what they would like to do and in this would be an option for not adding anymore
+       choices: [
+         "Engineer",
+         "Intern",
+         "I don't want to add any more team members"
+       ]
+     }
+   ]).then(_userChoice_ => {
+     switch (userChoice.memberChoice) {
+       case "Engineer":
+         addEngineer();
+         break;
+       case "Intern":
+         addIntern();
+         break;
+       default:
+         buildTeam();
+     }
+   });
+ }
+10:54
+That is an example - so you would basically start out (like how you did basic questions) to get them started and say hey what would you like to do- then based on their choice you would continue ( engineer, intern, or stop if they chose they didn't want to add anymore)
+10:55
+So add in another option to your basic questions one- if that makes sense
+10:55
+And add in another switch statement
+
+Andy Pedonti  10:56 PM
+so this would go right after the switch statement that i have written, correct?
+:bust_in_silhouette:
+klewi314APP  10:57 PM
+As far as I understand you want it to be another switch statement
+10:58
+Bc you're asking the user what do you want to do? Create an intern, a manager, an engineer or stop
+10:59
+Or create a whole different function that only asks one question in the inquirier prompt ("what would you like to do- create more or not) then have another switch statement like above
+10:59
+That function would then be called at the end of each function where you want to trigger it
+
+Andy Pedonti  10:59 PM
+if it i would start that extra switch statement at line 112 on my code i think that i do understand
+:bust_in_silhouette:
+klewi314APP  11:00 PM
+In this case- in the addManager, addIntern and add Engineer
+11:00
+Yes- you could all it at the completion of each function- so that it automatically asks the user
+11:01
+And the format would be similar to the basic questions function - except with one question and then a .then with a switch statement
